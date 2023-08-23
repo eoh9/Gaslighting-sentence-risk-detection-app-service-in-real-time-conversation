@@ -1,9 +1,11 @@
 # 실시간 대화 속 가스라이팅 문장 위험 감지 앱서비스
 
+![Uploading 1.png…]()
+<img width="313" alt="2" src="https://github.com/eoh9/Gaslighting_chat/assets/62730155/e47600f4-486e-43ab-bbd5-ad1f9c890482">
+<img width="311" alt="3" src="https://github.com/eoh9/Gaslighting_chat/assets/62730155/d05a8cf3-9846-42f5-ad58-229e463c442b">
+<img width="310" alt="4" src="https://github.com/eoh9/Gaslighting_chat/assets/62730155/0738566d-dc56-4c4e-8351-41882199d7bc">
+<img width="308" alt="5" src="https://github.com/eoh9/Gaslighting_chat/assets/62730155/2efaf659-54a4-4d47-844e-659bbb320922">
 
-![1](./screenshot/1.png)
-![2](./screenshot/2.png)
-![3](./screenshot/3.png)
 
 ## Firebase 연동 기술
 
