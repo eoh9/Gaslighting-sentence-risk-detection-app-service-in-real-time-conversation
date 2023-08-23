@@ -40,6 +40,14 @@ class MyPageFragment : Fragment(R.layout.fragment_mypage) {
             if (username.isEmpty()) {
                 Toast.makeText(context, "유저이름은 빈 값으로 두실 수 없습니다.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
+            } else {
+                Toast.makeText(context, "프로필이 적용되었습니다.", Toast.LENGTH_SHORT).show()
+                // UserFragment로 화면 전환
+                val user = mutableMapOf<String, Any>()
+                user["username"] = username
+                user["description"] = description
+                currentUserDB.updateChildren(user)
+
             }
             val user = mutableMapOf<String, Any >()
             user["username"] = username

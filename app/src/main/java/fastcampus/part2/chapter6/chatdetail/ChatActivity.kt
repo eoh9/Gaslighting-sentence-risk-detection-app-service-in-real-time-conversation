@@ -21,12 +21,15 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 import java.io.IOException
 import android.util.Log
+import android.widget.TextView
+import com.google.gson.JsonObject
 
 class ChatActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityChatdetailBinding
     private lateinit var chatAdapter: ChatAdapter
     private lateinit var linearLayoutManager: LinearLayoutManager
+    private lateinit var resultTextView: TextView
 
     private var chatRoomId: String = ""
     private var otherUserId: String = ""
@@ -37,10 +40,53 @@ class ChatActivity : AppCompatActivity() {
 
     private val chatItemList = mutableListOf<ChatItem>()
 
+    private fun analyzeMessage(message: String) {
+        val requestBody = JsonObject().apply {
+            addProperty("message", message)
+        }
+
+        val mediaType = "application/json; charset=utf-8".toMediaType()
+        val request = Request.Builder()
+            .post(requestBody.toString().toRequestBody(mediaType))
+            .url("http://9355-34-142-200-166.ngrok.io/analyze") // 서버 주소 입력
+            .build()
+
+        val client = OkHttpClient()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+                runOnUiThread {
+                    Toast.makeText(applicationContext, "분석에 실패하였습니다.", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                response.use {
+                    if (it.isSuccessful) {
+                        val responseBody = it.body?.string()
+                        val jsonObject = JSONObject(responseBody)
+                        val result = jsonObject.optString("result")
+                        runOnUiThread {
+                            Toast.makeText(applicationContext, result, Toast.LENGTH_SHORT).show()
+                        }
+                    } else {
+                        runOnUiThread {
+                            Toast.makeText(applicationContext, "분석에 실패하였습니다.", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+            }
+        })
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityChatdetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
+        resultTextView = binding.resultTextView
 
         chatRoomId = intent.getStringExtra(EXTRA_CHAT_ROOM_ID) ?: return
         otherUserId = intent.getStringExtra(EXTRA_OTHER_USER_ID) ?: return
@@ -72,8 +118,6 @@ class ChatActivity : AppCompatActivity() {
         })
 
         binding.sendButton.setOnClickListener {
-            Log.d("ChatActivity", "Inside sendButton click listener")
-            Log.d("ChatActivity", "전송 버튼이 클릭되었습니다.")
             val message = binding.messageEditText.text.toString()
 
             if (!isInit) {
@@ -90,14 +134,13 @@ class ChatActivity : AppCompatActivity() {
                 userId = myUserId
             )
 
+            // Firebase 데이터 업로드 로직
             Firebase.database.reference.child(Key.DB_CHATS).child(chatRoomId).push().apply {
                 newChatItem.chatId = key
                 setValue(newChatItem).addOnFailureListener {
                     Log.e("ChatActivity", "Error saving chat: ", it)
                 }
             }
-
-
             Log.d("ChatActivity", "Firebase 데이터 업로드 완료")
 
             val updates: MutableMap<String, Any> = hashMapOf(
@@ -126,8 +169,7 @@ class ChatActivity : AppCompatActivity() {
             val requestBody =
                 root.toString().toRequestBody("application/json; charset=utf-8".toMediaType())
             val request =
-                Request.Builder().post(requestBody).url("https://fcm.googleapis.com/fcm/send")
-                    .header("Authorization", "key=<YOUR_FCM_SERVER_KEY>").build()
+                Request.Builder().post(requestBody).url("http://127.0.0.1:4040").build()  // 수정 필요
             client.newCall(request).enqueue(object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
                     e.printStackTrace()
@@ -136,17 +178,17 @@ class ChatActivity : AppCompatActivity() {
                 override fun onResponse(call: Call, response: Response) {
                     if (!response.isSuccessful) {
                         // 응답이 성공적이지 않은 경우에 대한 처리
-                        println("FCM 요청 실패: ${response.code} - ${response.message}")
+                        println("서버 요청 실패: ${response.code} - ${response.message}")
                     } else {
                         // 응답이 성공적인 경우에 대한 처리
-                        println("FCM 응답: ${response.body?.string()}")
+                        println("서버 응답: ${response.body?.string()}")
                     }
                 }
             })
 
-
             binding.messageEditText.text.clear()
         }
+
     }
 
 
@@ -155,7 +197,7 @@ class ChatActivity : AppCompatActivity() {
             .addOnSuccessListener {
                 val otherUserItem = it.getValue(UserItem::class.java)
                 otherUserFcmToken = otherUserItem?.fcmToken.orEmpty()
-                chatAdapter.otherUserItem = otherUserItem
+                chatAdapter.otherUserItem = otherUserItem // ChatAdapter에 otherUserItem 설정
                 isInit = true
                 Log.d("ChatActivity", "isInit is now true")
                 getChatData()
@@ -189,6 +231,3 @@ class ChatActivity : AppCompatActivity() {
     }
 
 }
-
-
-

@@ -36,6 +36,10 @@ class LoginActivity : AppCompatActivity() {
                     if (task.isSuccessful) {
                         // 회원가입 성공
                         Toast.makeText(this, "회원가입에 성공했습니다. 로그인해주세요.", Toast.LENGTH_SHORT).show()
+                        val intent = Intent(this, LoginActivity::class.java)
+                        startActivity(intent)
+                        finish()
+
                     } else {
                         // 회원가입 실패
                         Toast.makeText(this, "회원가입에 실패했습니다.", Toast.LENGTH_SHORT).show()
