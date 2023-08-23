@@ -1,4 +1,34 @@
-# 실시간 대화 속 가스라이팅 문장 위험 감지 앱서비스
+![image](https://github.com/eoh9/Gaslighting_chat/assets/62730155/6ae0d13b-a089-4eb7-af6a-ee925705b41b)# 실시간 대화 속 가스라이팅 문장 위험 감지 앱서비스
+![image](https://github.com/eoh9/Gaslighting_chat/assets/62730155/84d4e78c-c42a-46d3-b122-dfa93299ad4e)
+![image](https://github.com/eoh9/Gaslighting_chat/assets/62730155/5af50c0e-a9e5-426a-a2d8-ca52e9fc6e89)
+![image](https://github.com/eoh9/Gaslighting_chat/assets/62730155/6141a18e-f3c3-4303-9011-9a20a48e51e7)
+
+현재 시중에 나와있는 여러 챗봇이나 클린봇들은 모두 욕설이나, 혐오표현 등 직관적인 부정문을 잡아주고 있습니다.
+하지만, 그 어느 서비스에서도 가스라이팅 문장을 잡아낼 수는 없었습니다. 심지어, 우리가 많이 쓰는 chatgpt또한 가스라이팅 문장을 잡아내지 못하고 오히려 가스라이팅을 당하는 jailbreak현상을 겪고 있습니다.
+가스라이팅은 직장내, 학교, 가정, 연인사이 등 수직관계가 형성될 수 있는 모든 관계에서 이루어질 수 있습니다. 따라서 저희 돈!가스는 대화 속에서 가스라이팅 문장을 감지하여 해당 문장의 위험도를 측정해줍니다.
+사용자가 상대와 대화를 하면서 가스라이팅 의심 대화부분에 화면을 맞추고 오른쪽 상단에 보이는 버튼은 활성화시키면 해당 문장들 중 가스라이팅 문장이 있는 곳을 하이라이트 표시해줌으로써 인지시켜 줍니다. 아직 국내에서는 가스라이팅에 관련한 법적 처벌이 정의 되어 있지 않은 상태이지만, 꾸준히 사회에 이슈가 되고 있는 주제임으로 이에 대해 현재 우리가 할 수 있는 일은 그저 가스라이팅에 대한 경각심을 더욱 심어주고 미리 예방할 수 있도록 도움을 드리고 싶습니다.
+
+## 데이터 수집
+1. 공공데이터 & AI Hub
+2. 비정형 데이터: 디시인사이트, 네이버카페, 다음카페, 네이트판, 인벤, 펨코, 인스타그램, 페이스북 등.
+3. 구글 대화 이미지 크로링 및 텍스트 추출
+4. 데이터셋 자체 제작(전문가의 자문을 받아 검증을 완료, LGG그래프 활용)
+
+## 데이터 증강
+1. KoGPT fine-tuning
+
+## 가스라이팅 문장 분류
+1. KoBERT
+
+## 앱 서비스 제작
+1. 안드로이드 스튜디오(코틀린)
+
+## Firebase & 서버 연동 기술
+1. Firebase Realtime Database
+2. Firebase Authentication
+3. Firebase Cloude Message (일명 FCM)
+4. ngrok 가상 서버 연결 호출 & 출력
+
 
 <img width="313" alt="1" src="https://github.com/eoh9/Gaslighting_chat/assets/62730155/8a549239-ff42-481c-9240-c066ad7ae642">
 <img width="313" alt="2" src="https://github.com/eoh9/Gaslighting_chat/assets/62730155/e47600f4-486e-43ab-bbd5-ad1f9c890482">
@@ -7,52 +37,3 @@
 <img width="308" alt="5" src="https://github.com/eoh9/Gaslighting_chat/assets/62730155/2efaf659-54a4-4d47-844e-659bbb320922">
 
 
-## Firebase 연동 기술
-
-1. Firebase Realtime Database
-2. Firebase Authentication
-3. Firebase Cloude Message (일명 FCM)
-
-### Firebase
-
-[Firebase](https://firebase.google.com/)
-
-구글에서 만든 모바일 및 애플리케이션 개발 플랫폼, 다양한 플랫폼을 지원합니다. 
-
-(Android, iOS 뿐만 아니라, Web, Flutter, C++, 게임, 서버, 기타등등)
-
-애플리케이션 개발자가 더 나은 애플리케이션을 개발할 수 있도록 도와주는 개발 플랫폼
-
-- 빌드 (개발과정, 더 빠르게 시장에 진출하고 사용자에게 가치를 전달)
-    - 서버 관리 없이 백엔드 가동
-    - 일반적인 앱 개발 문제를 쉽게 해결
-    - 손쉽게 확장하여 수백만명의 사용자를 지원
-        - Cloude Firestore (클라우드에 데이터 저장, 동기화, 명시적인 쿼리 작성, 서버리스 앱 빌드)
-        - **Realtime Database (실시간 동기화 JSON 데이터를 저장하는 DB, (서버리스 앱 빌드))**
-        - Remote Config (동작 제어)
-        - Cloude Functions (서버 (를 따로 관리 안할 수 있도록 파이어베이스에서 서버 로직을 작성, 실행))
-        - **Cloude Messaging (푸시 메시지)**
-        - Cloude Storage (사진 및 동영상 저장)
-        - Firebase ML (머신러닝)
-        - 등등
-- 출시 및 모니터링 (짧은 시간에 훨씬 수월하게 앱 품질을 향상)
-    - 테스트, 분류, 문제 해결 프로세스 간소화
-    - 기능을 신중하게 출시하고 도입을 모니터링하세요.
-    - 문제를 조기에 정확하게 파악하여 우선순위를 정하고 안정성 및 성능 문제를 해결
-        - Google Analytics
-        - Remote Config
-        - Performance Monitoring
-        - Test Lab
-        - App Distribution
-- 참여 (앱 경험 최적화 및 고객 만족도 유지)
-    - 사용자를 파악하여 더 효과적으로 지원하고, 사용자층을 유지
-    - 실험을 실행하여 아이디어를 테스트하고 새롭고 유용한 정보를 파악
-    - 다양한 세그먼트에 맞게 앱을 맞춤 설정
-        - Remote Config
-        - Google Analytics
-        - A/B Testing
-        - **Authentication**
-        - **Cloud** **Messaging**
-        - Crashlytics
-        - Dynamic Links
-        - In-App Messaging
